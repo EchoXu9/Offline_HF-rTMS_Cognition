@@ -12,8 +12,6 @@ library(dmetar)
 library(dplyr)
 library(forestplot)
 
-install.packages("forestplot")
-
 setwd("~/OneDrive - UNSW/Brain_Stimulation/Meta-analysis/4 Data analyses/2. Data Analyses/2022.06.13_53")
 
 #### Acc_Effect sizes calculation ####
@@ -79,11 +77,6 @@ acc_ex <- metagen (TE = acc.ces.ex$cyi, seTE = acc.ces.ex$cvi, data = acc.ces.ex
                    outclab = acc.ces.ex$Total.pulses.per.session,
                    fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD", 
                    method.tau = "PM", n.e = acc.ces.ex$nACT, n.c = acc.ces.ex$nCTRL)
-sink("acc_ex")
-print(acc_ex)
-sink()
-
-
 forest(acc_ex, col.diamond = "red", study.results = TRUE, rightlabs = c("SMD", "95% CI", "Weight"), 
        leftcols = c("studlab","complab", "title", "outclab", "n.e","n.c"), 
        leftlabs = c("Authors", "Site", "Frequency", "Dosing","Active", "Control"),
@@ -92,9 +85,6 @@ forest(acc_ex, col.diamond = "red", study.results = TRUE, rightlabs = c("SMD", "
 
 #identify outliers: sig
 acc_ex_fo <- find.outliers(acc_ex)
-sink("acc_ex_fo")
-print(acc_ex_fo)
-sink()
 
 funnel(acc_ex,xlab = "Hedges' g",
        contour = c(0.95, 0.975, 0.99),
@@ -103,13 +93,9 @@ funnel(acc_ex,xlab = "Hedges' g",
          fill=c("darkblue","blue","lightblue"))
 
 acc_ex_egger <- eggers.test(x = acc_ex)
-sink("acc_ex_overall_egger")
-print(acc_ex_egger)
-sink()
 
 #Cognitive domain
 acc_ex_sg_cd <- update.meta (acc_ex, subgroup = acc.ces.ex$Cognitive.domain, random = TRUE, fixed = FALSE)
-
 forest(acc_ex_sg_cd,col.diamond = "red", study.results = TRUE,
        leftcols = c("studlab","complab", "title", "n.e","n.c"), 
        leftlabs = c("Authors", "Site", "Frequency", "Active", "Control"),
@@ -118,24 +104,13 @@ forest(acc_ex_sg_cd,col.diamond = "red", study.results = TRUE,
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 9, spacing = 0.6)
 
-sink("acc_ex_sg_cd")
-print(acc_ex_sg_cd)
-sink()
- 
 # Attention
 acc.ces.ex.att <- filter (acc.ces.ex, Cognitive.domain == "Attention")
 acc_ex_att <- metagen (TE = acc.ces.ex.att$cyi, seTE = acc.ces.ex.att$cvi, data = acc.ces.ex.att, studlab = acc.ces.ex.att$Authors,
                        fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                        method.tau = "PM", n.e = acc.ces.ex.att$nACT, n.c = acc.ces.ex.att$nCTRL)
 
-sink("acc_ex_att")
-print(acc_ex_att)
-sink()
-
 acc_ex_att_fo <- find.outliers(acc_ex_att)
-sink("acc_ex_att_fo")
-print(acc_ex_att_fo)
-sink()
 
 # Executive function
 acc.ces.ex.ef <- filter (acc.ces.ex, Cognitive.domain == "Executive function")
@@ -146,101 +121,45 @@ acc_ex_ef <- metagen (TE = acc.ces.ex.ef$cyi, seTE = acc.ces.ex.ef$cvi, data = a
                       outclab = acc.ces.ex.ef$Total.pulses.per.session,
                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD", 
                       method.tau = "PM", n.e = acc.ces.ex.ef$nACT, n.c = acc.ces.ex.ef$nCTRL)
-
 forest(acc_ex_ef, col.diamond = "red", study.results = TRUE, rightlabs = c("SMD", "95% CI", "Weight"), 
        leftcols = c("studlab","complab", "title", "outclab", "n.e","n.c"), 
        leftlabs = c("Authors", "Site", "Frequency", "Dosing","Active", "Control"),
        sortvar = TE, just = "center", label.left = "Favors Control", label.right = "Favors Active",
        fontsize = 10, spacing = 1.0, ff.lr = "bold")  
-sink("acc_ex_ef")
-print(acc_ex_ef)
-sink()
 
 acc_ex_ef_fo <- find.outliers(acc_ex_ef)
-sink("acc_ex_ef_fo")
-print(acc_ex_ef_fo)
-sink()
 
 # Working memory
 acc.ces.ex.wm <- filter (acc.ces.ex, WM == "Working memory")
 acc_ex_wm <- metagen (TE = acc.ces.ex.wm$cyi, seTE = acc.ces.ex.wm$cvi, data = acc.ces.ex.wm, studlab = acc.ces.ex.wm$Authors,
                       comb.fixed = FALSE, comb.random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                       method.tau = "PM", n.e = acc.ces.ex.wm$nACT, n.c = acc.ces.ex.wm$nCTRL)
-sink("acc_ex_wm")
-print(acc_ex_wm)
-sink()
 
 acc_ex_wm_fo <- find.outliers(acc_ex_wm)
-sink("acc_ex_wm_fo")
-print(acc_ex_wm_fo)
-sink()
 
 # Perception
 acc.ces.ex.per <- filter (acc.ces.ex, Cognitive.domain == "Perception")
 acc_ex_per <- metagen (TE = acc.ces.ex.per$cyi, seTE = acc.ces.ex.per$cvi, data = acc.ces.ex.per, studlab = acc.ces.ex.per$Authors,
                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                       method.tau = "PM", n.e = acc.ces.ex.per$nACT, n.c = acc.ces.ex.per$nCTRL)
-sink("acc_ex_per")
-print(acc_ex_per)
-sink()
 
 acc_ex_per_fo <- find.outliers(acc_ex_per)
-sink("acc_ex_per_fo")
-print(acc_ex_per_fo)
-sink()
-
 
 # Memory
 acc.ces.ex.mem <- filter (acc.ces.ex, Cognitive.domain == "Memory")
 acc_ex_mem <- metagen (TE = acc.ces.ex.mem$cyi, seTE = acc.ces.ex.mem$cvi, data = acc.ces.ex.mem, studlab = acc.ces.ex.mem$Authors,
                        fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                        method.tau = "PM", n.e = acc.ces.ex.mem$nACT, n.c = acc.ces.ex.mem$nCTRL)
-sink("acc_ex_mem")
-print(acc_ex_mem)
-sink()
 
 acc_ex_mem_fo <- find.outliers(acc_ex_mem)
-sink("acc_ex_mem_fo")
-print(acc_ex_mem_fo)
-sink()
 
 # Motor
 acc.ces.ex.mot <- filter (acc.ces.ex, Cognitive.domain == "Motor")
 acc_ex_mot <- metagen (TE = acc.ces.ex.mot$cyi, seTE = acc.ces.ex.mot$cvi, data = acc.ces.ex.mot, studlab = acc.ces.ex.mot$Authors,
                        fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                        method.tau = "PM", n.e = acc.ces.ex.mot$nACT, n.c = acc.ces.ex.mot$nCTRL)
-sink("acc_ex_mot")
-print(acc_ex_mot)
-sink()
 
 acc_ex_mot_fo <- find.outliers(acc_ex_mot)
-sink("acc_ex_mot_fo")
-print(acc_ex_mot_fo)
-sink()
-
-# Frontal lobe
-acc.ces.ex.fro <- filter (acc.ces.ex, SS == "Frontal")
-acc_ex_fro <- metagen (TE = acc.ces.ex.fro$cyi, seTE = acc.ces.ex.fro$cvi, data = acc.ces.ex.fro, studlab = acc.ces.ex.fro$Authors,
-                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
-                       method.tau = "PM", n.e = acc.ces.ex.fro$nACT, n.c = acc.ces.ex.fro$nCTRL)
-sink("acc_ex_fro")
-print(acc_ex_fro)
-sink()
-
-acc_ex_fro_fo <- find.outliers(acc_ex_fro)
-sink("acc_ex_fro_fo")
-print(acc_ex_fro_fo)
-sink()
-
-# Parietal lobe
-acc.ces.ex.par <- filter (acc.ces.ex, SS == "Parietal")
-acc_ex_par <- metagen (TE = acc.ces.ex.par$cyi, seTE = acc.ces.ex.par$cvi, data = acc.ces.ex.par, studlab = acc.ces.ex.par$Authors,
-                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
-                       method.tau = "PM", n.e = acc.ces.ex.par$nACT, n.c = acc.ces.ex.par$nCTRL)
-sink("acc_ex_par")
-print(acc_ex_par)
-sink()
-
 
 #### Acc_Subgroup analysis ####
 # Frequency_Ftype
@@ -253,10 +172,6 @@ forest(acc_ex_sg_fre,col.diamond = "red", study.results = TRUE,
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 9, spacing = 0.6)
 
-sink("acc_ex_sg_fre")
-print(acc_ex_sg_fre)
-sink()
-
 # Frequency_Fsubgroup
 acc_ex_sg_fs <- update.meta (acc_ex, subgroup = acc.ces.ex$Fsubgroup, random = TRUE, fixed = FALSE)
 forest(acc_ex_sg_fs,col.diamond = "red", study.results = TRUE,
@@ -266,23 +181,12 @@ forest(acc_ex_sg_fs,col.diamond = "red", study.results = TRUE,
        label.left = "Favors Control", label.right = "Favors Active", ff.lr = "bold",
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 9, spacing = 0.6)
-sink("acc_ex_sg_fs")
-print(acc_ex_sg_fs)
-sink()
 
 # Targeting methods
 acc_ex_sg_tm <- update.meta (acc_ex, subgroup = acc.ces.ex$Targeting.method, random = TRUE, fixed = FALSE)
-#forest(rt_ex_sg_tm,col.diamond = "red", study.results = TRUE,
-#leftcols = c("studlab","n.e","n.c" ), leftlabs = c("Authors","Active", "Sham"),
-#rightlabs = c("SMD", "95% CI", "Weight"), sortvar = TE, just = "center", col.by = "black")
-sink("acc_ex_sg_tm")
-print(acc_ex_sg_tm)
-sink()
-
 
 # Sham
 acc_ex_sg_sham <- update.meta (acc_ex, subgroup = acc.ces.ex$Type.of.sham, random = TRUE, fixed = FALSE)
-
 forest(acc_ex_sg_sham,col.diamond = "red", study.results = TRUE,
        leftcols = c("studlab","complab", "title", "n.e","n.c"), 
        leftlabs = c("Authors", "Site", "Frequency", "Active", "Control"),
@@ -325,29 +229,11 @@ forestplot(labeltext=tabletext, graph.pos=3,
            zero=1, cex=0.9, lineheight = "auto", boxsize=0.5, colgap=unit(6,"mm"),
            lwd.ci=2, ci.vertices=TRUE, ci.vertices.height = 0.4)
 
-sink("acc_ex_sg_sham")
-print(acc_ex_sg_sham)
-sink()
-
 #Stimulation sites
 acc_ex_sg_ss <- update.meta (acc_ex,subgroup = acc.ces.ex$SS, random = TRUE, fixed = FALSE)
-#forest(rt_ex_sg_ss,col.diamond = "red", smlab = "Hedges’ g", study.results = TRUE,
-#leftcols = c("studlab","n.e","n.c" ), leftlabs = c("Authors", "Active", "Sham"),
-#rightlabs = c("g", "95% CI", "Weight"), sortvar = TE, just = "center", col.by = "black")
-sink("acc_ex_sg_ss")
-print(acc_ex_sg_ss)
-sink()
 
 #Number of sessions
 acc_ex_sg_session <- update.meta (acc_ex, subgroup = acc.ces.ex$Type.of.session, random = TRUE, fixed = FALSE)
-#forest(rt_ex_sg_session, col.diamond = "red", smlab = "Hedges’ g", study.results = TRUE,
-#leftcols = c("studlab","n.e","n.c" ), leftlabs = c("Authors", "Active", "Sham"),
-#rightlabs = c("g", "95% CI", "Weight"), sortvar = TE, just = "center", col.by = "black")
-sink("acc_ex_sg_session")
-print(acc_ex_sg_session)
-sink()
-
-
 
 #### Acc_In #####
 acc.ces.in <- filter (acc.ces, Ftype == "inhibitory")
@@ -364,16 +250,9 @@ forest(acc_in, col.diamond = "red", study.results = TRUE, rightlabs = c("SMD", "
        leftlabs = c("Authors", "Site", "Frequency", "Dosing","Active", "Control"),
        sortvar = TE, just = "center", label.left = "Favors Control", label.right = "Favors Active",
        fontsize = 10, spacing = 0.8, ff.lr = "bold")
-sink("acc_in")
-print(acc_in)
-sink()
 
 #identify outliers
 acc_in_fo <- find.outliers(acc_in)
-sink("acc_in_fo")
-print(acc_in_fo)
-sink()
-
 
 #Cognitive domain
 acc_in_sg_cd <- update.meta (acc_in, subgroup = acc.ces.in$Cognitive.domain, random = TRUE, fixed = FALSE)
@@ -386,25 +265,13 @@ forest(acc_in_sg_cd,col.diamond = "red", study.results = TRUE,
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 10, spacing = 0.8)
 
-sink("acc_in_sg_cd")
-print(acc_in_sg_cd)
-sink()
-
-
 # Perception
 acc.ces.in.per <- filter (acc.ces.in, Cognitive.domain == "Perception")
 acc_in_per <- metagen (TE = acc.ces.in.per$cyi, seTE = acc.ces.in.per$cvi, data = acc.ces.in.per, studlab = acc.ces.in.per$Authors,
                        fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                        method.tau = "PM", n.e = acc.ces.in.per$nACT, n.c = acc.ces.in.per$nCTRL)
 
-sink("acc_in_per")
-print(acc_in_per)
-sink()
-
 acc_in_per_fo <- find.outliers(acc_in_per)
-sink("acc_in_per_fo")
-print(acc_in_per_fo)
-sink()
 
 # Executive function
 acc.ces.in.ef <- filter (acc.ces.in, Cognitive.domain == "Executive function")
@@ -412,14 +279,7 @@ acc_in_ef <- metagen (TE = acc.ces.in.ef$cyi, seTE = acc.ces.in.ef$cvi, data = a
                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                       method.tau = "PM", n.e = acc.ces.in.ef$nACT, n.c = acc.ces.in.ef$nCTRL)
 
-sink("acc_in_ef")
-print(acc_in_ef)
-sink()
-
 acc_in_ef_fo <- find.outliers(acc_in_ef)
-sink("acc_in_ef_fo")
-print(acc_in_ef_fo)
-sink()
 
 # Attention
 acc.ces.in.att <- filter (acc.ces.in, Cognitive.domain == "Attention")
@@ -427,14 +287,7 @@ acc_in_att <- metagen (TE = acc.ces.in.att$cyi, seTE = acc.ces.in.att$cvi, data 
                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                       method.tau = "PM", n.e = acc.ces.in.att$nACT, n.c = acc.ces.in.att$nCTRL)
 
-sink("acc_in_att")
-print(acc_in_att)
-sink()
-
 acc_in_att_fo <- find.outliers(acc_in_att)
-sink("acc_in_att_fo")
-print(acc_in_att_fo)
-sink()
 
 # Memory
 acc.ces.in.mem <- filter (acc.ces.in, Cognitive.domain == "Memory")
@@ -442,14 +295,7 @@ acc_in_mem <- metagen (TE = acc.ces.in.mem$cyi, seTE = acc.ces.in.mem$cvi, data 
                        fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                        method.tau = "PM", n.e = acc.ces.in.mem$nACT, n.c = acc.ces.in.mem$nCTRL)
 
-sink("acc_in_mem")
-print(acc_in_mem)
-sink()
-
 acc_in_mem_fo <- find.outliers(acc_in_mem)
-sink("acc_in_mem_fo")
-print(acc_in_mem_fo)
-sink()
 
 # Motor
 acc.ces.in.mot<- filter (acc.ces.in, Cognitive.domain == "Motor")
@@ -457,14 +303,7 @@ acc_in_mot <- metagen (TE = acc.ces.in.mot$cyi, seTE = acc.ces.in.mot$cvi, data 
                        fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                        method.tau = "PM", n.e = acc.ces.in.mot$nACT, n.c = acc.ces.in.mot$nCTRL)
 
-sink("acc_in_mot")
-print(acc_in_mot)
-sink()
-
 acc_in_mot_fo <- find.outliers(acc_in_mot)
-sink("acc_in_mot_fo")
-print(acc_in_mot_fo)
-sink()
 
 #### RT_Ex ####
 # Overall
@@ -482,21 +321,14 @@ rt_ex <- metagen (TE = rt.ces.ex$cyi, seTE = rt.ces.ex$cvi, data = rt.ces.ex,
                    outclab = rt.ces.ex$Total.pulses.per.session,
                    fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD", 
                    method.tau = "PM", n.e = rt.ces.ex$nACT, n.c = rt.ces.ex$nCTRL)
-sink("rt_ex")
-print(rt_ex)
-sink()
 
 rt_ex_fo <- find.outliers(rt_ex)
-sink("rt_ex_fo")
-print(rt_ex_fo)
-sink()
 
 forest(rt_ex, col.diamond = "red", study.results = TRUE, rightlabs = c("SMD", "95% CI", "Weight"), 
        leftcols = c("studlab","complab", "title", "outclab", "n.e","n.c"), 
        leftlabs = c("Authors", "Site", "Frequency", "Dosing","Active", "Control"),
        sortvar = TE, just = "center", label.left = "Favors Active", label.right = "Favors Control",
        fontsize = 10, spacing = 0.8, ff.lr = "bold")   
-
 
 funnel(rt_ex,xlab = "Hedges' g",
        contour = c(0.95, 0.975, 0.99),
@@ -505,11 +337,6 @@ funnel(rt_ex,xlab = "Hedges' g",
          fill=c("darkblue","blue","lightblue"))
 
 rt_ex_egger <- eggers.test(x = rt_ex)
-sink("rt_ex_overall_egger")
-print(rt_ex_egger)
-sink()
-
-
 
 #### RT_Subgroup analysis ####
 # Frequency
@@ -521,9 +348,6 @@ forest(rt_ex_sg_fre,col.diamond = "red", study.results = TRUE,
        label.left = "Favors Active", label.right = "Favors Control", ff.lr = "bold",
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 9, spacing = 0.6)
-sink("rt_ex_sg_fre")
-print(rt_ex_sg_fre)
-sink()
 
 # Frequency_Fsubgroup
 rt_ex_sg_fs <- update.meta (rt_ex, subgroup= rt.ces.ex$Fsubgroup, random = TRUE, fixed = FALSE)
@@ -534,9 +358,6 @@ forest(rt_ex_sg_fs,col.diamond = "red", study.results = TRUE,
        label.left = "Favors Active", label.right = "Favors Control", ff.lr = "bold",
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 9, spacing = 0.6)
-sink("rt_ex_sg_fs")
-print(rt_ex_sg_fs)
-sink()
 
 # Targeting methods
 rt_ex_sg_tm <- update.meta (rt_ex, subgroup = rt.ces.ex$Targeting.method, random = TRUE, fixed = FALSE)
@@ -547,10 +368,6 @@ forest(rt_ex_sg_tm,col.diamond = "red", study.results = TRUE,
        label.left = "Favors Active", label.right = "Favors Control", ff.lr = "bold",
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 9, spacing = 0.6)
-sink("rt_ex_sg_tm")
-print(rt_ex_sg_tm)
-sink()
-
 
 # Sham
 rt_ex_sg_sham <- update.meta (rt_ex, subgroup = rt.ces.ex$Type.of.sham, random = TRUE, fixed = FALSE)
@@ -561,28 +378,12 @@ forest(rt_ex_sg_sham,col.diamond = "red", study.results = TRUE,
        label.left = "Favors Active", label.right = "Favors Control", ff.lr = "bold",
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 9, spacing = 0.7)
-sink("rt_ex_sg_sham")
-print(rt_ex_sg_sham)
-sink()
 
 #Stimulation sites
 rt_ex_sg_ss <- update.meta (rt_ex, subgroup = rt.ces.ex$SS, random = TRUE, fixed = FALSE)
-#forest(rt_ex_sg_ss,col.diamond = "red", smlab = "Hedges’ g", study.results = TRUE,
-       #leftcols = c("studlab","n.e","n.c" ), leftlabs = c("Authors", "Active", "Sham"),
-       #rightlabs = c("g", "95% CI", "Weight"), sortvar = TE, just = "center", col.by = "black")
-
-sink("rt_ex_sg_ss")
-print(rt_ex_sg_ss)
-sink()
 
 #Number of sessions
 rt_ex_sg_session <- update.meta (rt_ex, subgroup = rt.ces.ex$Type.of.session, random = TRUE, fixed = FALSE)
-#forest(rt_ex_sg_session,col.diamond = "red", study.results = TRUE,
-       #leftcols = c("studlab","complab", "title", "n.e","n.c"), leftlabs = c("Authors", "Site", "Frequency", "Active", "Control"),
-       #rightlabs = c("SMD", "95% CI", "Weight"), sortvar = TE, just = "center", col.by = "black", byseparator = " : ")
-sink("rt_ex_sg_session")
-print(rt_ex_sg_session)
-sink()
 
 # Cognitive domain
 rt_ex_sg_cd <- update.meta (rt_ex, subgroup = rt.ces.ex$Cognitive.domain, comb.random = TRUE, comb.fixed = FALSE)
@@ -593,23 +394,14 @@ forest(rt_ex_sg_cd,col.diamond = "red", study.results = TRUE,
        label.left = "Favors Active", label.right = "Favors Control", ff.lr = "bold",
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 9, spacing = 0.6)
-sink("rt_ex_sg_cd")
-print(rt_ex_sg_cd)
-sink()
 
 # Attention
 rt.ces.ex.att <- filter (rt.ces.ex, Cognitive.domain == "Attention")
 rt_ex_att <- metagen (TE = rt.ces.ex.att$cyi, seTE = rt.ces.ex.att$cvi, data = rt.ces.ex.att, studlab = rt.ces.ex.att$Authors,
                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                       method.tau = "PM", n.e = rt.ces.ex.att$nACT, n.c = rt.ces.ex.att$nCTRL)
-sink("rt_ex_att")
-print(rt_ex_att)
-sink()
 
 rt_ex_att_fo <- find.outliers(rt_ex_att)
-sink("rt_ex_att_fo")
-print(rt_ex_att_fo)
-sink()
 
 # Executive function
 rt.ces.ex.ef <- filter (rt.ces.ex, Cognitive.domain == "Executive function")
@@ -626,14 +418,8 @@ forest(rt_ex_ef, col.diamond = "red", study.results = TRUE, rightlabs = c("SMD",
        leftlabs = c("Authors", "Site", "Frequency", "Dosing","Active", "Control"),
        sortvar = TE, just = "center", label.left = "Favors Active", label.right = "Favors Control",
        fontsize = 10, spacing = 1.0, ff.lr = "bold")  
-sink("rt_ex_ef")
-print(rt_ex_ef)
-sink()
 
 rt_ex_ef_fo <- find.outliers(rt_ex_ef)
-sink("rt_ex_ef_fo")
-print(rt_ex_ef_fo)
-sink()
 
 # Motor
 rt.ces.ex.mot <- filter (rt.ces.ex, Cognitive.domain == "Motor")
@@ -650,14 +436,8 @@ forest(rt_ex_mot, col.diamond = "red", study.results = TRUE, rightlabs = c("SMD"
        leftlabs = c("Authors", "Site", "Frequency", "Dosing","Active", "Control"),
        sortvar = TE, just = "center", label.left = "Favors Active", label.right = "Favors Control",
        fontsize = 10, spacing = 1.0, ff.lr = "bold") 
-sink("rt_ex_mot")
-print(rt_ex_mot)
-sink()
 
 rt_ex_mot_fo <- find.outliers(rt_ex_mot)
-sink("rt_ex_mot_fo")
-print(rt_ex_mot_fo)
-sink()
 
 #### RT_In ####
 rt.ces.in <- filter (rt.ces, Ftype == "inhibitory")
@@ -674,15 +454,9 @@ forest(rt_in, col.diamond = "red", study.results = TRUE, rightlabs = c("SMD", "9
        leftlabs = c("Authors", "Site", "Frequency", "Dosing","Active", "Control"),
        sortvar = TE, just = "center", label.left = "Favors Active", label.right = "Favors Control",
        fontsize = 10, spacing = 0.8, ff.lr = "bold")
-sink("rt_in")
-print(rt_in)
-sink()
 
 #identify outliers: non-sig
 rt_in_fo <- find.outliers(rt_in)
-sink("rt_in_fo")
-print(rt_in_fo)
-sink()
 
 #Cognitive domain
 rt_in_sg_cd <- update.meta (rt_in, subgroup = rt.ces.in$Cognitive.domain, random = TRUE, fixed = FALSE)
@@ -694,42 +468,21 @@ forest(rt_in_sg_cd,col.diamond = "red", study.results = TRUE,
        test.subgroup = FALSE, overall = FALSE, subgroup = TRUE, sep.subgroup = ": ", hetstat = TRUE, overall.hetstat = FALSE,
        fontsize = 10, spacing = 0.8)
 
-sink("rt_in_sg_cd")
-print(rt_in_sg_cd)
-sink
-
 # Attention
 rt.ces.in.att <- filter (rt.ces.in, Cognitive.domain == "Attention")
 rt_in_att <- metagen (TE = rt.ces.in.att$cyi, seTE = rt.ces.in.att$cvi, data = rt.ces.in.att, studlab = rt.ces.in.att$Authors,
                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                       method.tau = "PM", n.e = rt.ces.in.att$nACT, n.c = rt.ces.in.att$nCTRL)
 
-sink("rt_in_att")
-print(rt_in_att)
-sink()
-
 rt_in_att_fo <- find.outliers(rt_in_att)
-sink("rt_in_att_fo")
-print(rt_in_att_fo)
-sink()
 
 # Executive function
 rt.ces.in.ef <- filter (rt.ces.in, Cognitive.domain == "Executive function")
 rt_in_ef <- metagen (TE = rt.ces.in.ef$cyi, seTE = rt.ces.in.ef$cvi, data = rt.ces.in.ef, studlab = rt.ces.in.ef$Authors,
                      fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                      method.tau = "PM", n.e = rt.ces.in.ef$nACT, n.c = rt.ces.in.ef$nCTRL)
-#forest(rt_in_ef,col.diamond = "red", study.results = TRUE, rightlabs = c("SMD", "95% CI", "Weight"), 
-#leftcols = c("studlab","complab", "title", "n.e","n.c"), leftlabs = c("Authors", "Site", "Frequency", "Active", "Control"),
-#sortvar = TE, just = "center")  
-
-sink("rt_in_ef")
-print(rt_in_ef)
-sink()
 
 rt_in_ef_fo <- find.outliers(rt_in_ef)
-sink("rt_in_ef_fo")
-print(rt_in_ef_fo)
-sink()
 
 # Language
 rt.ces.in.lan <- filter (rt.ces.in, Cognitive.domain == "Language")
@@ -737,15 +490,7 @@ rt_in_lan <- metagen (TE = rt.ces.in.lan$cyi, seTE = rt.ces.in.lan$cvi, data = r
                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                       method.tau = "PM", n.e = rt.ces.in.lan$nACT, n.c = rt.ces.in.lan$nCTRL)
 
-sink("rt_in_lan")
-print(rt_in_lan)
-sink()
-
 rt_in_lan_fo <- find.outliers(rt_in_lan)
-sink("rt_in_lan_fo")
-print(rt_in_lan_fo)
-sink()
-
 
 # Perception
 rt.ces.in.per <- filter (rt.ces.in, Cognitive.domain == "Perception")
@@ -753,32 +498,18 @@ rt_in_per <- metagen (TE = rt.ces.in.per$cyi, seTE = rt.ces.in.per$cvi, data = r
                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                       method.tau = "PM", n.e = rt.ces.in.per$nACT, n.c = rt.ces.in.per$nCTRL)
 
-sink("rt_in_per")
-print(rt_in_per)
-sink()
-
 rt_in_per_fo <- find.outliers(rt_in_per)
-sink("rt_in_per_fo")
-print(rt_in_per_fo)
-sink()
 
 # Working memory
 rt.ces.ex.wm <- filter (rt.ces.ex, WM == "Working memory")
 rt_ex_wm <- metagen (TE = rt.ces.ex.wm$cyi, seTE = rt.ces.ex.wm$cvi, data = rt.ces.ex.wm, studlab = rt.ces.ex.wm$Authors,
                       fixed = FALSE, random = TRUE, hakn = FALSE, prediction = TRUE,sm ="SMD",
                       method.tau = "PM", n.e = rt.ces.ex.wm$nACT, n.c = rt.ces.ex.wm$nCTRL)
-sink("rt_ex_wm")
-print(rt_ex_wm)
-sink()
 
 rt_ex_wm_fo <- find.outliers(rt_ex_wm)
-sink("rt_ex_wm_fo")
-print(rt_ex_wm_fo)
-sink()
-
 
 #### Summary plots ####
-
+#accuracy
 data_acc <- read.csv ("~/OneDrive - UNSW/Brain_Stimulation/Meta-analysis/4 Data analyses/2. Data Analyses/2022.06.13_53/Datasets/summary_acc.csv", stringsAsFactors=FALSE)
 
 ## Labels defining subgroups are a little indented!
@@ -793,7 +524,6 @@ tabletext <- cbind(c("Subgroup","\n",data_acc$Variable),
                    c("Q","\n",data_acc$Q),
                    c("I^2","\n",data_acc$I.2),
                    c("p","\n",data_acc$P.Value))
-
 
 forestplot(labeltext=tabletext,  
            mean=c(NA,NA,data_acc$SMD), graph.pos= 4,
@@ -810,8 +540,7 @@ forestplot(labeltext=tabletext,
            zero= 1.000000000001, lwd.zero = 0 , cex= 1, lineheight = "auto", boxsize= 0.3, colgap=unit(3,"mm"),
            lwd.ci= 2, ci.vertices=TRUE, ci.vertices.height = 0.2)
 
-
-
+# reaction time
 data_rt <- read.csv ("~/OneDrive - UNSW/Brain_Stimulation/Meta-analysis/4 Data analyses/2. Data Analyses/2022.06.13_53/Datasets/summary_rt.csv", stringsAsFactors=FALSE)
 
 ## Labels defining subgroups are a little indented!
@@ -842,14 +571,4 @@ forestplot(labeltext=tabletext,
            col=fpColors(box="royalblue", lines="darkblue", zero = "gray50"), 
            zero= 0.500000000001, lwd.zero = 0, cex= 1, lineheight = "auto", boxsize= 0.3, colgap=unit(6,"mm"),
            lwd.ci= 2, ci.vertices=TRUE, ci.vertices.height = 0.2)
-
-
-
-
-
-
-
-
-
-
 
